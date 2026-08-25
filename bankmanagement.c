@@ -16,6 +16,52 @@ struct Manager
     int manageraccount;
 };
 
+int deleteuser(int account_no)
+{
+    int delfound = 0;
+    FILE *fp = fopen("user.txt", "r");
+    FILE *temp = fopen("tempuser.txt", "w");
+    struct Bank tempuser;
+    if (fp == NULL || temp == NULL)
+    {
+        printf("\033[31m");
+        printf("ERROR OPENING FILE\n");
+        printf("\033[0m");
+        return 0;
+    }
+    while (fscanf(fp, " %49[^\n]", tempuser.name) == 1)
+    {
+        fscanf(fp, "%d", &tempuser.Account_no);
+        fscanf(fp, "%f", &tempuser.balance);
+        fscanf(fp, "%d", &tempuser.pin);
+        if (account_no == tempuser.Account_no)
+        {
+            // skiping the user found
+            delfound = 1;
+        }
+        else
+        {
+            fprintf(temp, "%s\n%d\n%f\n%d\n",
+                    tempuser.name,
+                    tempuser.Account_no,
+                    tempuser.balance,
+                    tempuser.pin);
+        }
+    }
+    fclose(fp);
+    fclose(temp);
+    if (delfound == 1)
+    {
+        remove("user.txt");
+        rename("tempuser.txt", "user.txt");
+    }
+    else
+    {
+        remove("tempuser.txt");
+    }
+    return delfound;
+}
+
 void updatebalance(int account_no, float new_balance)
 {
     // iss function mai basically yek new file mai old file ka data update karke daal rahae hai
@@ -216,7 +262,7 @@ int main()
                         fp = fopen("user.txt", "r");
                         float bal;
 
-                        while (fscanf(fp, "%s", b.name) == 1)
+                        while (fscanf(fp, "%49[^\n]s", b.name) == 1)
                         {
                             fscanf(fp, "%d", &b.Account_no);
                             fscanf(fp, "%f", &b.balance);
@@ -263,7 +309,6 @@ int main()
         // fp = fopen("manager.txt", "r");
         // fscanf(fp, "%s %d %99[^\n]", m.bankmanager_name, &m.manageraccount, m.masterpassword);
 
-
         printf("ENTER YOUR MASTER PASSWORD: ");
         scanf("%99s", checkmanager);
         // checking master password
@@ -275,7 +320,7 @@ int main()
             printf("------------------------------------\n");
 
             do
-            {// manager menu
+            { // manager menu
                 printf("\n[1] ADD USER\n");
                 printf("[2] SEARCH USER\n");
                 printf("[3] DELETE USER\n");
@@ -291,6 +336,13 @@ int main()
                     // add user
                     FILE *user;
                     user = fopen("user.txt", "a");
+                    if (user == NULL)
+                    {
+                        printf("\033[31m");
+                        printf("ERROR OPENING FILE\n");
+                        printf("\033[0m");
+                        break;
+                    }
                     printf("ENTER NAME OF NEW USER: ");
                     getchar();
                     scanf("%49[^\n]s", b.name);
@@ -321,7 +373,6 @@ int main()
                         printf("\033[31m");
                         printf("NO USER FOUND!!\n");
                         printf("\033[0m");
-                        
                     }
                     else
                     {
@@ -352,14 +403,14 @@ int main()
                             printf("\033[31m");
                             printf("USER NOT FOUND!!\n");
                             printf("\033[0m");
-                            
                         }
-                        else if(found==1){
+                        else if (found == 1)
+                        {
                             printf("\033[32m");
                             printf("\n-------USER DETAILS-------\n");
-                            printf("NAME      : %s\n",b.name);
-                            printf("ACCOUNT No: %d\n",b.Account_no);
-                            printf("BALANCE   : %.2f\n",b.balance);
+                            printf("NAME      : %s\n", b.name);
+                            printf("ACCOUNT No: %d\n", b.Account_no);
+                            printf("BALANCE   : %.2f\n", b.balance);
                             printf("\033[0m");
                         }
                         break;
@@ -368,47 +419,94 @@ int main()
                 case 3:
                 {
                     // delete user
-                    printf("\033[31m");
-                    printf("THIS FEATURE IS NOT AVAILABLE!!!\n");
-                    printf("\033[0m");
-                    break;
-                    // fp = fopen("bank.txt", "r");
+                    // printf("\033[31m");
+                    // printf("THIS FEATURE IS NOT AVAILABLE!!!\n");
+                    // printf("\033[0m");
+                    // break;
 
                     // printf("ENTER ACCOUNT NO. OF USER: ");
                     // int check_accountno;
                     // scanf("%d", &check_accountno);
 
-                    // if (check_accountno == m.Account_no)
-                    // {
-                    //     fscanf("%s %d %d %s", m.name, m.Account_no, m.balance, m.pin);
-                    //     printf("\n-----DETAILS OF USER ----\n");
-                    //     printf("NAME : %s\n", m.name);
-                    //     printf("ACCOUNT NO. : %d\n", m.Account_no);
-                    //     printf("BALANCE : %f\n", m.balance);
-                    //     printf("pin : %s\n", m.pin);
-                    //     printf("ARE YOU SURE YOU WANT TO DELETE THIS USER (Y/N): ");
-                    //     char sure;
-                    //     //  feature not working !!! under dev
-                    //     if (sure == 'Y' || sure == 'y')
-                    //     {
-                    //         printf("USER DELETED SUCESSFULLY\n");
-                    //     }
-                    //     else if (sure == 'N' || sure == 'n')
-                    //     {
-                    //         printf("OPERATION CANCELED!!\n");
-                    //     }
-                    //     else
-                    //     {
-                    //         printf("WRONG INPUT!!\n");
-                    //     }
-                    //     fclose(fp);
-                    // }
-                    // else
-                    // {
-                    //     printf("USER NOT FOUND!!");
-                    //     fclose(fp);
-                    // }
-                    // break;
+                    // case 2 repeat
+                    fp = fopen("user.txt", "r");
+                    if (fp == NULL)
+                    {
+                        printf("\033[31m");
+                        printf("NO USER FOUND!!\n");
+                        printf("\033[0m");
+                    }
+                    else
+                    {
+                        int found = 0;
+                        // searching on basis of account no.
+                        printf("ENTER ACCOUNT NO. OF USER: ");
+                        int check_accountno;
+                        scanf("%d", &check_accountno);
+
+                        // check
+                        while (fscanf(fp, " %49[^\n]", b.name) == 1)
+                        {
+                            fscanf(fp, "%d", &b.Account_no);
+                            fscanf(fp, "%f", &b.balance);
+                            fscanf(fp, "%d", &b.pin);
+
+                            if (check_accountno == b.Account_no)
+                            {
+
+                                found = 1;
+                                break;
+                            }
+                        }
+
+                        fclose(fp);
+                        if (found == 0)
+                        {
+                            printf("\033[31m");
+                            printf("USER NOT FOUND!!\n");
+                            printf("\033[0m");
+                        }
+                        else if (found == 1)
+                        {
+                            printf("\033[32m");
+                            printf("\n-------USER DETAILS-------\n");
+                            printf("NAME      : %s\n", b.name);
+                            printf("ACCOUNT No: %d\n", b.Account_no);
+                            printf("BALANCE   : %.2f\n", b.balance);
+                            printf("\033[0m");
+                        }
+
+                        printf("ARE YOU SURE YOU WANT TO DELETE THIS USER ? (y/n): ");
+                        char confirm;
+                        getchar();
+                        scanf("%c", &confirm);
+                        if (confirm == 'Y' || confirm == 'y')
+                        {
+                            if (deleteuser(check_accountno) == 1)
+                            {
+                                printf("\033[32m");
+                                printf("USER DELETED SUCESSFULLY...");
+                                printf("\033[0m");
+                            }
+                            else
+                            {
+                                printf("\033[31m");
+                                printf("USER NOT FOUND!!");
+                                printf("\033[0m");
+                            }
+                        }
+                        else if (confirm == 'N' || confirm == 'n')
+                        {
+                            printf("DELETE CANCELLED\n");
+                        }
+                        else
+                        {
+                            printf("\033[31m");
+                            printf("WRONG INPUT!!\n");
+                            printf("\033[0m");
+                        }
+                        break;
+                    }
                 }
                 case 4:
                 {
