@@ -271,7 +271,7 @@ int main()
         {
 
             printf("\n----------------------------------\n");
-            printf("--------------WELCEOME %s-----------\n", m.bankmanager_name);
+            printf("WELCEOME %s\n", m.bankmanager_name);
             printf("------------------------------------\n");
 
             do
@@ -321,7 +321,7 @@ int main()
                         printf("\033[31m");
                         printf("NO USER FOUND!!\n");
                         printf("\033[0m");
-                        return 0;
+                        
                     }
                     else
                     {
@@ -352,13 +352,15 @@ int main()
                             printf("\033[31m");
                             printf("USER NOT FOUND!!\n");
                             printf("\033[0m");
-                            return 0;
+                            
                         }
                         else if(found==1){
+                            printf("\033[32m");
                             printf("\n-------USER DETAILS-------\n");
                             printf("NAME      : %s\n",b.name);
                             printf("ACCOUNT No: %d\n",b.Account_no);
                             printf("BALANCE   : %.2f\n",b.balance);
+                            printf("\033[0m");
                         }
                         break;
                     }
