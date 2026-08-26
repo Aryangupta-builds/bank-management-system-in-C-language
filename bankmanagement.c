@@ -192,7 +192,8 @@ int main()
                     printf("\n[1] DEPOSIT MONEY \n");
                     printf("[2] WITHDRAW MONEY \n");
                     printf("[3] CHECK BALANCE \n");
-                    printf("[4] EXIT \n");
+                    printf("[4] INTER-ACCOUNT TRANSFER \n");
+                    printf("[5] EXIT \n");
                     printf("SELECT YOUR CHOICE : ");
                     scanf("%d", &choice_normal);
                     switch (choice_normal)
@@ -278,7 +279,13 @@ int main()
                         fclose(fp);
                         break;
                     }
-                    case 4:
+                    case 4:{
+                        printf("\033[31m");
+                        printf("THIS FEATURE IS UNDER DEVELOPMENT\n");
+                        printf("\033[0m");
+                    }
+
+                    case 5:
                     {
                         printf("EXITING.....");
                         break;
@@ -291,7 +298,7 @@ int main()
                     }
                     }
 
-                } while (choice_normal != 4);
+                } while (choice_normal != 5);
             }
             else
             {
@@ -474,36 +481,36 @@ int main()
                             printf("ACCOUNT No: %d\n", b.Account_no);
                             printf("BALANCE   : %.2f\n", b.balance);
                             printf("\033[0m");
-                        }
 
-                        printf("ARE YOU SURE YOU WANT TO DELETE THIS USER ? (y/n): ");
-                        char confirm;
-                        getchar();
-                        scanf("%c", &confirm);
-                        if (confirm == 'Y' || confirm == 'y')
-                        {
-                            if (deleteuser(check_accountno) == 1)
+                            printf("ARE YOU SURE YOU WANT TO DELETE THIS USER ? (y/n): ");
+                            char confirm;
+                            getchar();
+                            scanf("%c", &confirm);
+                            if (confirm == 'Y' || confirm == 'y')
                             {
-                                printf("\033[32m");
-                                printf("USER DELETED SUCESSFULLY...");
-                                printf("\033[0m");
+                                if (deleteuser(check_accountno) == 1)
+                                {
+                                    printf("\033[32m");
+                                    printf("USER DELETED SUCESSFULLY...");
+                                    printf("\033[0m");
+                                }
+                                else
+                                {
+                                    printf("\033[31m");
+                                    printf("USER NOT FOUND!!");
+                                    printf("\033[0m");
+                                }
+                            }
+                            else if (confirm == 'N' || confirm == 'n')
+                            {
+                                printf("DELETE CANCELLED\n");
                             }
                             else
                             {
                                 printf("\033[31m");
-                                printf("USER NOT FOUND!!");
+                                printf("WRONG INPUT!!\n");
                                 printf("\033[0m");
                             }
-                        }
-                        else if (confirm == 'N' || confirm == 'n')
-                        {
-                            printf("DELETE CANCELLED\n");
-                        }
-                        else
-                        {
-                            printf("\033[31m");
-                            printf("WRONG INPUT!!\n");
-                            printf("\033[0m");
                         }
                         break;
                     }
