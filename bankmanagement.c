@@ -62,6 +62,179 @@ int deleteuser(int account_no)
     return delfound;
 }
 
+int interbanktranaction(int senderaccount, int reciveraccount, float amount_transfer)
+{
+    int success = 0;
+    int foundsender = 0;
+    int failed = 0;
+    int foundreciver = 0;
+    FILE *fp = fopen("user.txt", "r");
+    // FILE *user = fopen("user.txt", "r");
+    // FILE *reciver = fopen("user.txt", "r");
+    FILE *temp = fopen("tempuser.txt", "w");
+    // FILE *temptransfer = fopen("tempuser.txt", "w");
+    // FILE *tempreciver = fopen("tempuser.txt", "w");
+    struct Bank tempuser;
+
+    if (fp == NULL || temp == NULL)
+    {
+        printf("\033[31m");
+        printf("ERROR OPENING FILE\n");
+        printf("\033[0m");
+        if (fp != NULL)
+        {
+            fclose(fp);
+        }
+        if (temp != NULL)
+        {
+            fclose(temp);
+        }
+        return 0;
+    }
+    // checking valid sender and reciver
+    while (fscanf(fp, " %49[^\n]", tempuser.name) == 1)
+    {
+        fscanf(fp, "%d", &tempuser.Account_no);
+        fscanf(fp, "%f", &tempuser.balance);
+        fscanf(fp, "%d", &tempuser.pin);
+        if (senderaccount == tempuser.Account_no)
+        {
+            foundsender = 1;
+        }
+        if (reciveraccount == tempuser.Account_no)
+        {
+            foundreciver = 1;
+        }
+    }
+    // SENDER NOT FOUND
+    if (!foundsender)
+    {
+        printf("\033[31m");
+        printf("SENDER NOT FOUND!!\n");
+        printf("\033[0m");
+        failed = 1;
+        fclose(fp);
+        fclose(temp);
+        remove("tempuser.txt");
+        return 0;
+    }
+    // RECIVER NOT FOUND
+    if (!foundreciver)
+    {
+        printf("\033[31m");
+        printf("RECEIVER NOT FOUND!!\n");
+        printf("\033[0m");
+        failed = 1;
+        fclose(fp);
+        fclose(temp);
+        remove("tempuser.txt");
+        return 0;
+    }
+    // validate amount
+    if (amount_transfer <= 0)
+    {
+        printf("\033[31m");
+        printf("INVALID TRANSFER AMOUNT!!\n");
+        printf("\033[0m");
+        failed = 1;
+        fclose(fp);
+        fclose(temp);
+        remove("tempuser.txt");
+        return 0;
+    }
+
+    // cannot transfer to own account
+    if (senderaccount == reciveraccount)
+    {
+        printf("\033[31m");
+        printf("YOU CANNOT TRANSFER MONEY TO YOUR OWN ACCOUNT!!\n");
+        printf("\033[0m");
+        failed = 1;
+        fclose(fp);
+        fclose(temp);
+        remove("tempuser.txt");
+        return 0;
+    }
+    rewind(fp); // iss se phir se fp file ke starting pe aajayega
+    if (foundreciver == 1 && foundsender == 1)
+    {
+        while (fscanf(fp, " %49[^\n]", tempuser.name) == 1)
+        {
+            fscanf(fp, "%d", &tempuser.Account_no);
+            fscanf(fp, "%f", &tempuser.balance);
+            fscanf(fp, "%d", &tempuser.pin);
+            if (senderaccount == tempuser.Account_no)
+            {
+                if (tempuser.balance < amount_transfer)
+                {
+                    printf("\033[31m");
+                    printf("INSUFFICENT BALANCE!!\n");
+                    printf("\033[0m");
+                    failed = 1;
+                    fclose(fp);
+                    fclose(temp);
+                    remove("tempuser.txt");
+                    break;
+                }
+                else if (tempuser.balance >= amount_transfer)
+                {
+                    tempuser.balance -= amount_transfer;
+                }
+            }
+            else if (reciveraccount == tempuser.Account_no)
+            {
+                tempuser.balance += amount_transfer;
+            }
+            fprintf(temp, "%s\n%d\n%f\n%d\n", tempuser.name, tempuser.Account_no, tempuser.balance, tempuser.pin);
+        }
+    }
+
+    if (failed == 0)
+    {
+        fclose(fp);
+        fclose(temp);
+
+        if (remove("user.txt") != 0)
+        {
+            printf("ERROR DELETING OLD FILE!!\n");
+            remove("tempuser.txt");
+            return 0;
+        }
+
+        if (rename("tempuser.txt", "user.txt") != 0)
+        {
+            printf("ERROR RENAMING TEMP FILE!!\n");
+            return 0;
+        }
+
+        success = 1;
+    }
+    return success;
+}
+
+int finduser(int account, struct Bank *user)
+{
+    FILE *fp = fopen("user.txt", "r");
+
+    if (fp == NULL)
+    {
+        return 0;
+    }
+    while (fscanf(fp, " %49[^\n]", user->name) == 1)
+    {
+        fscanf(fp, "%d", &user->Account_no);
+        fscanf(fp, "%f", &user->balance);
+        fscanf(fp, "%d", &user->pin);
+        if (account == user->Account_no)
+        {
+            fclose(fp);
+            return 1;
+        }
+    }
+    fclose(fp);
+    return 0;
+}
+
 void updatebalance(int account_no, float new_balance)
 {
     // iss function mai basically yek new file mai old file ka data update karke daal rahae hai
@@ -279,10 +452,69 @@ int main()
                         fclose(fp);
                         break;
                     }
-                    case 4:{
-                        printf("\033[31m");
-                        printf("THIS FEATURE IS UNDER DEVELOPMENT\n");
-                        printf("\033[0m");
+                    case 4:
+                    {
+                        int receiver;
+                        float amount;
+                        struct Bank reciveuser;
+                        printf("ENTER RECEIVER ACCOUNT NO : ");
+                        scanf("%d", &receiver);
+                        if (!finduser(receiver, &reciveuser))
+                        {
+                            printf("\033[31m");
+                            printf("RECEIVER ACCOUNT NOT FOUND!!\n");
+                            printf("\033[0m");
+                            break;
+                        }
+                        if(receiver==check){
+                         printf("\033[31m");
+                            printf("CANNOT TRANSFER TO OWN ACCOUNT!!\n");
+                            printf("\033[0m");
+                            break;
+                        }
+                        printf("ENTER AMOUNT TO BE TRANSFER : ");
+                        scanf("%f", &amount);
+                        if(amount<=0){
+                         printf("\033[31m");
+                            printf("INVALID TRANSFER AMOUNT!!\n");
+                            printf("\033[0m");
+                            break;
+                        }
+
+                        printf("ARE YOU SURE YOU WANT TO TRANSFER Rs%.2f TO %s ? (y/n): ", amount, reciveuser.name);
+                        char confirm1;
+                        getchar();
+                        scanf("%c", &confirm1);
+                        if (confirm1 == 'Y' || confirm1 == 'y')
+                        {
+                            if (interbanktranaction(check, receiver, amount) == 1)
+                            {
+
+                                printf("\033[32m");
+                                printf("TRANSFER SUCCESSFUL!!\n");
+                                printf("\033[0m");
+                            }
+                            else
+                            {
+                                printf("\033[31m");
+                                printf("TRANSFER FAILED!!\n");
+                                printf("\033[0m");
+                            }
+                        }
+                        else if (confirm1 == 'N' || confirm1 == 'n')
+                        {
+                            printf("\033[32m");
+                            printf("CANCELED THE TRANSFER..\n");
+                            printf("\033[0m");
+                        }
+                        else
+                        {
+                            printf("\033[31m");
+                            printf("WRONG INPUT!!\n");
+                            printf("\033[0m");
+                        }
+
+                        break;
                     }
 
                     case 5:

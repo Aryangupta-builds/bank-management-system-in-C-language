@@ -16,6 +16,7 @@ A simple console-based Bank Management System written in C, using file handling 
 - **Deposit Money** — adds to balance and updates `user.txt`.
 - **Withdraw Money** — subtracts from balance (blocks if insufficient funds).
 - **Check Balance** — displays current balance.
+- **Inter-Account Transfer** — transfers money to another customer's account by account number, with checks for a valid receiver, sufficient balance, non-zero amount, and no self-transfers, plus a `y/n` confirmation before the transfer happens.
 
 ## How It Works
 
@@ -23,6 +24,8 @@ A simple console-based Bank Management System written in C, using file handling 
 - Manager credentials are stored in `manager.txt`, created only once (on first run).
 - `updatebalance()` handles balance changes by reading `user.txt`, writing the updated records to a temporary file (`tempuser.txt`), then deleting the original and renaming the temp file — a simple pattern for "editing" a line in a flat text file.
 - `deleteuser()` uses the same read-and-rewrite pattern: it copies every record except the matching account number into `tempuser.txt`, then swaps it in for `user.txt`. Returns `1` if a matching user was found and removed, `0` otherwise.
+- `finduser()` looks up an account by number and fills a `struct Bank` with that user's details — used to validate the receiver before a transfer.
+- `interbanktranaction()` handles money transfers between two customer accounts: it validates that both the sender and receiver exist, the amount is positive, the accounts aren't the same, and the sender has enough balance — then rewrites `user.txt` with the sender's balance decreased and the receiver's increased, using the same temp-file swap pattern.
 - Colored terminal output (ANSI escape codes) is used to highlight success (green) and error (red) messages.
 
 ## Files Generated at Runtime
@@ -93,7 +96,7 @@ SELECT YOUR USER : 4
 EXITING....
 ```
 
-**Customer session — deposit and check balance:**
+**Customer session — deposit, check balance, and transfer money:**
 
 ```
 -------------BANK MANAGEMENT SYSTEM--------------
@@ -105,28 +108,34 @@ ENTER YOUR PIN: 1234
 [1] DEPOSIT MONEY 
 [2] WITHDRAW MONEY 
 [3] CHECK BALANCE 
-[4] EXIT 
-SELECT YOUR CHOICE : 1
-ENTER THE AMOUNT YOU HAVE TO DEPOSIT : 1000
-AMOUNT DEPOSIT SUCESSFULLY...
-NEW BALANCE : 6000.00
-
-[1] DEPOSIT MONEY 
-[2] WITHDRAW MONEY 
-[3] CHECK BALANCE 
-[4] EXIT 
-SELECT YOUR CHOICE : 3
-YOUR CURRENT BALANCE IS : 6000.00
-
-[1] DEPOSIT MONEY 
-[2] WITHDRAW MONEY 
-[3] CHECK BALANCE 
-[4] EXIT 
+[4] INTER-ACCOUNT TRANSFER 
+[5] EXIT 
 SELECT YOUR CHOICE : 4
+ENTER RECEIVER ACCOUNT NO : 2002
+ENTER AMOUNT TO BE TRANSFER : 1000
+ARE YOU SURE YOU WANT TO TRANSFER Rs1000.00 TO Jane Smith ? (y/n): y
+TRANSFER SUCCESSFUL!!
+
+[1] DEPOSIT MONEY 
+[2] WITHDRAW MONEY 
+[3] CHECK BALANCE 
+[4] INTER-ACCOUNT TRANSFER 
+[5] EXIT 
+SELECT YOUR CHOICE : 3
+YOUR CURRENT BALANCE IS : 4000.00
+
+[1] DEPOSIT MONEY 
+[2] WITHDRAW MONEY 
+[3] CHECK BALANCE 
+[4] INTER-ACCOUNT TRANSFER 
+[5] EXIT 
+SELECT YOUR CHOICE : 5
 EXITING.....
 ```
 
-*(In red/green in the real terminal — success messages show in green, errors in red, via ANSI codes. Output above was captured by compiling and running the code above.)*
+*(Sender's account started at 5000, sent Rs1000 to receiver 2002, leaving a balance of 4000.)*
+
+*(In red/green in the real terminal — success messages show in green, errors in red, via ANSI codes. Output above was captured by compiling and running the current version of the code, including the transfer feature.)*
 
 ## Known Limitations / To-Do
 
@@ -134,6 +143,7 @@ EXITING.....
 - Master password and PINs are stored in plain text — not secure for real-world use.
 - `scanf("%[^\n]s", ...)` for password/name input can behave inconsistently with buffered newlines; mixing `scanf("%d", ...)` and string reads occasionally requires an extra `getchar()` to clear the input buffer.
 - No way to change PIN/password after creation.
+- Inter-account transfer rewrites `user.txt` via delete-and-rename, so an interruption mid-transfer (e.g. program crash) could leave the file in an inconsistent state — there's no rollback.
 
 ## About This Project
 
