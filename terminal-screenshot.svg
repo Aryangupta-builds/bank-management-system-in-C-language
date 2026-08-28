@@ -1,0 +1,58 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono', 'Menlo', 'Consolas', monospace">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="22" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <linearGradient id="titlebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b3b3b"/>
+      <stop offset="100%" stop-color="#2c2c2c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- window -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="20" width="840" height="580" rx="12" fill="#1e1e1e"/>
+
+    <!-- title bar -->
+    <path d="M30 32 a12 12 0 0 1 12 -12 h816 a12 12 0 0 1 12 12 v30 h-840 z" fill="url(#titlebar)"/>
+    <circle cx="58" cy="47" r="7" fill="#ff5f56" stroke="#e0443e" stroke-width="1"/>
+    <circle cx="80" cy="47" r="7" fill="#ffbd2e" stroke="#dea123" stroke-width="1"/>
+    <circle cx="102" cy="47" r="7" fill="#27c93f" stroke="#1aab29" stroke-width="1"/>
+    <text x="450" y="52" fill="#c7c7c7" font-size="13" text-anchor="middle">aryan@macbook — bank_manager — 90x40</text>
+
+    <!-- body -->
+    <rect x="30" y="62" width="840" height="538" fill="#161616"/>
+
+    <g font-size="14" fill="#d6d6d6" xml:space="preserve">
+      <text x="50" y="95" fill="#8fd3ff">aryan@macbook BankSystem % ./bank_manager</text>
+
+      <text x="50" y="120" fill="#e8e8e8">-------------BANK MANAGEMENT SYSTEM--------------</text>
+      <text x="50" y="142" fill="#e8e8e8">ENTER YOUR ACCOUNT NUMBER: <tspan fill="#8fd3ff">1042</tspan></text>
+      <text x="50" y="164" fill="#e8e8e8">ENTER YOUR PIN: <tspan fill="#8fd3ff">****</tspan></text>
+
+      <text x="50" y="192" fill="#f2f2f2">------WELCOME Aryan Gupta-----</text>
+
+      <text x="50" y="220" fill="#e8e8e8">[1] DEPOSIT MONEY</text>
+      <text x="50" y="242" fill="#e8e8e8">[2] WITHDRAW MONEY</text>
+      <text x="50" y="264" fill="#e8e8e8">[3] CHECK BALANCE</text>
+      <text x="50" y="286" fill="#e8e8e8">[4] INTER-ACCOUNT TRANSFER</text>
+      <text x="50" y="308" fill="#e8e8e8">[5] EXIT</text>
+      <text x="50" y="332" fill="#e8e8e8">SELECT YOUR CHOICE : <tspan fill="#8fd3ff">4</tspan></text>
+
+      <text x="50" y="360" fill="#e8e8e8">ENTER RECEIVER ACCOUNT NO : <tspan fill="#8fd3ff">2078</tspan></text>
+      <text x="50" y="382" fill="#e8e8e8">ENTER AMOUNT TO BE TRANSFER : <tspan fill="#8fd3ff">500.00</tspan></text>
+      <text x="50" y="404" fill="#e8e8e8">ARE YOU SURE YOU WANT TO TRANSFER Rs500.00 TO Rohit ? (y/n): <tspan fill="#8fd3ff">y</tspan></text>
+
+      <text x="50" y="432" fill="#4ee44e">TRANSFER SUCCESSFUL!!</text>
+
+      <text x="50" y="458" fill="#e8e8e8">==============================</text>
+      <text x="50" y="478" fill="#e8e8e8">      TRANSCTION RECEIPT      </text>
+      <text x="50" y="498" fill="#e8e8e8">==============================</text>
+      <text x="50" y="518" fill="#e8e8e8">Sender Account   : 1042</text>
+      <text x="50" y="538" fill="#e8e8e8">Receiver Account : 2078</text>
+      <text x="50" y="558" fill="#e8e8e8">Receiver Name    : Rohit</text>
+      <text x="50" y="578" fill="#e8e8e8">Amount           : Rs 500.00</text>
+      <text x="50" y="598" fill="#4ee44e">Status           : SUCCESSFUL</text>
+    </g>
+  </g>
+</svg>

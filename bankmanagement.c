@@ -16,6 +16,40 @@ struct Manager
     int manageraccount;
 };
 
+void savereceipt(struct Bank *sender, struct Bank *receiver, float amount)
+{
+    FILE *fp = fopen("transactions.txt", "a");
+    if (fp == NULL)
+    {
+        printf("\033[31m");
+        printf("ERROR OPENING FILE\n");
+        printf("\033[0m");
+        return;
+    }
+    // printing recept in the file
+    fprintf(fp, "==============================\n");
+    fprintf(fp, "      TRANSACTION RECEIPT      \n");
+    fprintf(fp, "==============================\n");
+    fprintf(fp, "Sender Account   : %d\n", sender->Account_no);
+    fprintf(fp, "Receiver Account : %d\n", receiver->Account_no);
+    fprintf(fp, "Receiver Name    : %s\n", receiver->name);
+    fprintf(fp, "Amount           : Rs %.2f\n", amount);
+    fprintf(fp, "Status           : SUCCESSFUL\n");
+    fprintf(fp, "==============================\n");
+    // printing it in the console
+    printf("==============================\n");
+    printf("      TRANSACTION RECEIPT      \n");
+    printf("==============================\n");
+    printf("Sender Account   : %d\n", sender->Account_no);
+    printf("Receiver Account : %d\n", receiver->Account_no);
+    printf("Receiver Name    : %s\n", receiver->name);
+    printf("Amount           : Rs %.2f\n", amount);
+    printf("\033[32m");
+    printf("Status           : SUCCESSFUL\n");
+    printf("\033[0m");
+    printf("==============================\n");
+}
+
 int deleteuser(int account_no)
 {
     int delfound = 0;
@@ -407,18 +441,18 @@ int main()
                         int withdraw;
                         scanf("%d", &withdraw);
 
-                        if (b.balance < withdraw)
+                        if (withdraw <= 0)
+                        {
+                            printf("\033[31m");
+                            printf("WRONG AMOUNT ENTERED!\n");
+                            printf("\033[0m");
+                        }
+                        else if (b.balance < withdraw)
                         {
                             printf("\033[31m");
                             printf("INSUFFICIENT BALANCE!!\n");
                             printf("\033[0m");
                             break;
-                        }
-                        else if (withdraw <= 0)
-                        {
-                            printf("\033[31m");
-                            printf("WRONG AMOUNT ENTERED!\n");
-                            printf("\033[0m");
                         }
                         else
                         {
@@ -434,9 +468,9 @@ int main()
                     {
                         // check balance
                         fp = fopen("user.txt", "r");
-                        float bal;
+                        float bal = 0.0f;
 
-                        while (fscanf(fp, "%49[^\n]s", b.name) == 1)
+                        while (fscanf(fp, " %49[^\n]", b.name) == 1)
                         {
                             fscanf(fp, "%d", &b.Account_no);
                             fscanf(fp, "%f", &b.balance);
@@ -448,8 +482,8 @@ int main()
                             }
                         }
 
-                        printf("YOUR CURRENT BALANCE IS : %.2f\n", bal);
                         fclose(fp);
+                        printf("YOUR CURRENT BALANCE IS : %.2f\n", bal);
                         break;
                     }
                     case 4:
@@ -466,16 +500,18 @@ int main()
                             printf("\033[0m");
                             break;
                         }
-                        if(receiver==check){
-                         printf("\033[31m");
+                        if (receiver == check)
+                        {
+                            printf("\033[31m");
                             printf("CANNOT TRANSFER TO OWN ACCOUNT!!\n");
                             printf("\033[0m");
                             break;
                         }
                         printf("ENTER AMOUNT TO BE TRANSFER : ");
                         scanf("%f", &amount);
-                        if(amount<=0){
-                         printf("\033[31m");
+                        if (amount <= 0)
+                        {
+                            printf("\033[31m");
                             printf("INVALID TRANSFER AMOUNT!!\n");
                             printf("\033[0m");
                             break;
@@ -493,6 +529,7 @@ int main()
                                 printf("\033[32m");
                                 printf("TRANSFER SUCCESSFUL!!\n");
                                 printf("\033[0m");
+                                savereceipt(&b, &reciveuser, amount);
                             }
                             else
                             {
@@ -525,7 +562,7 @@ int main()
                     default:
                     {
                         printf("\033[31m");
-                        printf("!!!!!!11WRONG OPTION OPT!!!!!!!!\n");
+                        printf("!!!!!!!!WRONG OPTION OPT!!!!!!!!\n");
                         printf("\033[0m");
                     }
                     }

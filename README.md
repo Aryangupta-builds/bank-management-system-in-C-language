@@ -1,150 +1,69 @@
-# Bank Management System (C)
+# 🏦 Bank Account Manager
 
-A simple console-based Bank Management System written in C, using file handling (`.txt` files) for persistent storage. Supports two roles — **Bank Manager** and **Normal User** — with separate menus and permissions.
+A console-based **Bank Management System** written in C, using file handling (`user.txt`, `manager.txt`, `transactions.txt`) to persist data — no database required. Built as a self-made project to practice structs, file I/O, and modular functions in C.
 
-## Features
+![Customer Terminal Preview](./terminal-screenshot.svg)
 
-### Manager
-- First run auto-creates the bank: sets manager name, account number, and master password (saved to `manager.txt`).
-- Logs in with account number + master password.
-- **Add User** — creates a new customer with name, account number, initial balance, and PIN (appended to `user.txt`).
-- **Search User** — looks up a customer by account number and displays their details.
-- **Delete User** — looks up a customer by account number, shows their details, asks for `y/n` confirmation, then removes them from `user.txt`.
+## ✨ Features
 
-### Normal User
-- Logs in with account number + PIN.
-- **Deposit Money** — adds to balance and updates `user.txt`.
-- **Withdraw Money** — subtracts from balance (blocks if insufficient funds).
-- **Check Balance** — displays current balance.
-- **Inter-Account Transfer** — transfers money to another customer's account by account number, with checks for a valid receiver, sufficient balance, non-zero amount, and no self-transfers, plus a `y/n` confirmation before the transfer happens.
+### 👤 Customer
+- Login with **Account Number + PIN**
+- 💰 Deposit money
+- 💸 Withdraw money
+- 📊 Check balance
+- 🔁 Inter-account money transfer (with sender/receiver validation and y/n confirmation)
+- 🧾 Auto-generated transaction receipt (console + saved to `transactions.txt`)
 
-## How It Works
+### 🛠️ Manager
+- First-run setup: create bank manager profile + master password
+- Login with **Manager Account Number + Master Password**
+- ➕ Add new user
+- 🔍 Search user by account number
+- 🗑️ Delete user (with confirmation)
 
-- User records are stored in `user.txt` as plain text: name, account number, balance, and PIN, one field per line.
-- Manager credentials are stored in `manager.txt`, created only once (on first run).
-- `updatebalance()` handles balance changes by reading `user.txt`, writing the updated records to a temporary file (`tempuser.txt`), then deleting the original and renaming the temp file — a simple pattern for "editing" a line in a flat text file.
-- `deleteuser()` uses the same read-and-rewrite pattern: it copies every record except the matching account number into `tempuser.txt`, then swaps it in for `user.txt`. Returns `1` if a matching user was found and removed, `0` otherwise.
-- `finduser()` looks up an account by number and fills a `struct Bank` with that user's details — used to validate the receiver before a transfer.
-- `interbanktranaction()` handles money transfers between two customer accounts: it validates that both the sender and receiver exist, the amount is positive, the accounts aren't the same, and the sender has enough balance — then rewrites `user.txt` with the sender's balance decreased and the receiver's increased, using the same temp-file swap pattern.
-- Colored terminal output (ANSI escape codes) is used to highlight success (green) and error (red) messages.
+![Manager Terminal Preview](./manager-screenshot.svg)
 
-## Files Generated at Runtime
+## 📂 File Structure
 
 | File | Purpose |
 |---|---|
-| `manager.txt` | Stores the bank manager's name, account number, and master password |
-| `user.txt` | Stores all customer records |
-| `tempuser.txt` | Temporary file used during balance updates (auto-deleted) |
+| `bank_manager.c` | Main source code |
+| `manager.txt` | Stores bank manager details (auto-created on first run) |
+| `user.txt` | Stores all customer account records |
+| `transactions.txt` | Log of all successful transfers/receipts |
 
-## Build & Run
+## ⚙️ How It Works
+
+- Each customer record (`struct Bank`) stores: name, account number, balance, PIN.
+- The manager record (`struct Manager`) stores: name, account number, master password.
+- All reads/writes go through helper functions:
+  - `finduser()` — looks up an account by number
+  - `updatebalance()` — rewrites `user.txt` with an updated balance
+  - `deleteuser()` — rewrites `user.txt` excluding the deleted account
+  - `interbanktransaction()` — validates and performs a transfer between two accounts
+  - `savereceipt()` — prints and logs a transaction receipt
+
+## 🚀 Build & Run
 
 ```bash
-gcc bank.c -o bank
-./bank
+gcc bank_manager.c -o bank_manager
+./bank_manager
 ```
 
-On the first run, you'll be prompted to set up the bank manager. On subsequent runs, log in with either the manager's account number or a customer's account number.
+On the very first run, no `manager.txt` exists yet — the program will prompt you to set up the bank manager (name, account number, master password). After that, the same login screen serves both customers and the manager: entering the manager's account number routes you to the manager menu (after the master password), and any other valid account number routes to the customer menu (after the PIN).
 
-## Sample Terminal Output
+## 🌍 Portability
 
-**Manager session — add a user and search for them:**
+Yes — the code only uses standard C (`stdio.h`, `string.h`), so it compiles and runs on **Linux, macOS, and Windows** with any standard C compiler (GCC, Clang, MinGW, etc.). No OS-specific libraries are used, and the data files (`user.txt`, `manager.txt`, `transactions.txt`) are created automatically in the same folder wherever you run it — no setup needed on a new machine.
 
-```
-----NEW BANK-----
-ENTER NAME OF BANK MANAGER: Aryan Gupta
-ENTER YOUR ACCOUNT NO : 1001
-SET YOUR MASTER PASSWIRD: admin123
+One thing to note: the colored output (`\033[31m`, `\033[32m`, etc.) uses ANSI escape codes. These work out of the box on Linux/macOS terminals and on modern Windows Terminal / PowerShell, but on the old Windows `cmd.exe` you may need to enable ANSI support (or just ignore it — the color codes will print as raw text but the program will still run fine).
 
-Manager file created sucessfully
--------------BANK MANAGEMENT SYSTEM--------------
-ENTER YOUR ACCOUNT NUMBER: 1001
-ENTER YOUR MASTER PASSWORD: admin123
+## 🧩 Possible Improvements
 
-----------------------------------
-WELCEOME Aryan Gupta
-------------------------------------
+- Hash the PIN and master password instead of storing them in plain text
+- Replace fixed-width file parsing with a more robust format (e.g. CSV with a proper parser, or a lightweight database)
+- Add input validation loops (currently a bad `scanf` input can desync the menu)
+- Separate customer/manager logic into different `.c`/`.h` files for readability
 
-[1] ADD USER
-[2] SEARCH USER
-[3] DELETE USER
-[4] EXIT
-SELECT YOUR USER : 1
-ENTER NAME OF NEW USER: John Doe
-ENTER ACCOUNT NO. OF NEW USER: 2001
-ENTER THE INITIAL BALANCE OF ACCOUNT: 5000
-SET PIN OF USER : 1234
-
-User Added Sucessfully!!
-
-[1] ADD USER
-[2] SEARCH USER
-[3] DELETE USER
-[4] EXIT
-SELECT YOUR USER : 2
-ENTER ACCOUNT NO. OF USER: 2001
-
--------USER DETAILS-------
-NAME      : John Doe
-ACCOUNT No: 2001
-BALANCE   : 5000.00
-
-[1] ADD USER
-[2] SEARCH USER
-[3] DELETE USER
-[4] EXIT
-SELECT YOUR USER : 4
-EXITING....
-```
-
-**Customer session — deposit, check balance, and transfer money:**
-
-```
--------------BANK MANAGEMENT SYSTEM--------------
-ENTER YOUR ACCOUNT NUMBER: 2001
-ENTER YOUR PIN: 1234
-
-------WELCOME John Doe-----
-
-[1] DEPOSIT MONEY 
-[2] WITHDRAW MONEY 
-[3] CHECK BALANCE 
-[4] INTER-ACCOUNT TRANSFER 
-[5] EXIT 
-SELECT YOUR CHOICE : 4
-ENTER RECEIVER ACCOUNT NO : 2002
-ENTER AMOUNT TO BE TRANSFER : 1000
-ARE YOU SURE YOU WANT TO TRANSFER Rs1000.00 TO Jane Smith ? (y/n): y
-TRANSFER SUCCESSFUL!!
-
-[1] DEPOSIT MONEY 
-[2] WITHDRAW MONEY 
-[3] CHECK BALANCE 
-[4] INTER-ACCOUNT TRANSFER 
-[5] EXIT 
-SELECT YOUR CHOICE : 3
-YOUR CURRENT BALANCE IS : 4000.00
-
-[1] DEPOSIT MONEY 
-[2] WITHDRAW MONEY 
-[3] CHECK BALANCE 
-[4] INTER-ACCOUNT TRANSFER 
-[5] EXIT 
-SELECT YOUR CHOICE : 5
-EXITING.....
-```
-
-*(Sender's account started at 5000, sent Rs1000 to receiver 2002, leaving a balance of 4000.)*
-
-*(In red/green in the real terminal — success messages show in green, errors in red, via ANSI codes. Output above was captured by compiling and running the current version of the code, including the transfer feature.)*
-
-## Known Limitations / To-Do
-
-- No input validation for account numbers (e.g., duplicate account numbers aren't checked when adding a user).
-- Master password and PINs are stored in plain text — not secure for real-world use.
-- `scanf("%[^\n]s", ...)` for password/name input can behave inconsistently with buffered newlines; mixing `scanf("%d", ...)` and string reads occasionally requires an extra `getchar()` to clear the input buffer.
-- No way to change PIN/password after creation.
-- Inter-account transfer rewrites `user.txt` via delete-and-rename, so an interruption mid-transfer (e.g. program crash) could leave the file in an inconsistent state — there's no rollback.
-
-## About This Project
-
-This is my first project. It follows a Student Management System exercise as a self-made practice project, applying the same file-I/O patterns (struct-based records, read/update/rewrite via a temp file) to a bank account context.
+---
+*A project by Aryan Gupta — BCA student, Amity University Online.*

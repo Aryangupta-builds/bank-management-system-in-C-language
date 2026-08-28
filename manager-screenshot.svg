@@ -1,0 +1,57 @@
+<svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" font-family="'SF Mono', 'Menlo', 'Consolas', monospace">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="22" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <linearGradient id="titlebar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b3b3b"/>
+      <stop offset="100%" stop-color="#2c2c2c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- window -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="20" width="840" height="580" rx="12" fill="#1e1e1e"/>
+
+    <!-- title bar -->
+    <path d="M30 32 a12 12 0 0 1 12 -12 h816 a12 12 0 0 1 12 12 v30 h-840 z" fill="url(#titlebar)"/>
+    <circle cx="58" cy="47" r="7" fill="#ff5f56" stroke="#e0443e" stroke-width="1"/>
+    <circle cx="80" cy="47" r="7" fill="#ffbd2e" stroke="#dea123" stroke-width="1"/>
+    <circle cx="102" cy="47" r="7" fill="#27c93f" stroke="#1aab29" stroke-width="1"/>
+    <text x="450" y="52" fill="#c7c7c7" font-size="13" text-anchor="middle">aryan@macbook — bank_manager — 90x40</text>
+
+    <!-- body -->
+    <rect x="30" y="62" width="840" height="538" fill="#161616"/>
+
+    <g font-size="14" fill="#d6d6d6" xml:space="preserve">
+      <text x="50" y="95" fill="#8fd3ff">aryan@macbook BankSystem % ./bank_manager</text>
+
+      <text x="50" y="120" fill="#e8e8e8">-------------BANK MANAGEMENT SYSTEM--------------</text>
+      <text x="50" y="142" fill="#e8e8e8">ENTER YOUR ACCOUNT NUMBER: <tspan fill="#8fd3ff">9000</tspan></text>
+      <text x="50" y="164" fill="#e8e8e8">ENTER YOUR MASTER PASSWORD: <tspan fill="#8fd3ff">********</tspan></text>
+
+      <text x="50" y="192" fill="#f2f2f2">----------------------------------</text>
+      <text x="50" y="214" fill="#f2f2f2">WELCEOME Aryan Gupta</text>
+      <text x="50" y="236" fill="#f2f2f2">------------------------------------</text>
+
+      <text x="50" y="266" fill="#e8e8e8">[1] ADD USER</text>
+      <text x="50" y="288" fill="#e8e8e8">[2] SEARCH USER</text>
+      <text x="50" y="310" fill="#e8e8e8">[3] DELETE USER</text>
+      <text x="50" y="332" fill="#e8e8e8">[4] EXIT</text>
+      <text x="50" y="356" fill="#e8e8e8">SELECT YOUR USER : <tspan fill="#8fd3ff">1</tspan></text>
+
+      <text x="50" y="384" fill="#e8e8e8">ENTER NAME OF NEW USER: <tspan fill="#8fd3ff">Rohit Sharma</tspan></text>
+      <text x="50" y="406" fill="#e8e8e8">ENTER ACCOUNT NO. OF NEW USER: <tspan fill="#8fd3ff">2078</tspan></text>
+      <text x="50" y="428" fill="#e8e8e8">ENTER THE INITIAL BALANCE OF ACCOUNT: <tspan fill="#8fd3ff">1000.00</tspan></text>
+      <text x="50" y="450" fill="#e8e8e8">SET PIN OF USER : <tspan fill="#8fd3ff">****</tspan></text>
+
+      <text x="50" y="480" fill="#4ee44e">User Added Sucessfully!!</text>
+
+      <text x="50" y="510" fill="#e8e8e8">[1] ADD USER</text>
+      <text x="50" y="532" fill="#e8e8e8">[2] SEARCH USER</text>
+      <text x="50" y="554" fill="#e8e8e8">[3] DELETE USER</text>
+      <text x="50" y="576" fill="#e8e8e8">[4] EXIT</text>
+      <text x="50" y="598" fill="#e8e8e8">SELECT YOUR USER : <tspan fill="#8fd3ff">4</tspan></text>
+    </g>
+  </g>
+</svg>
