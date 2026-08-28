@@ -47,11 +47,12 @@
 
       <text x="50" y="480" fill="#4ee44e">User Added Sucessfully!!</text>
 
-      <text x="50" y="510" fill="#e8e8e8">[1] ADD USER</text>
-      <text x="50" y="532" fill="#e8e8e8">[2] SEARCH USER</text>
-      <text x="50" y="554" fill="#e8e8e8">[3] DELETE USER</text>
-      <text x="50" y="576" fill="#e8e8e8">[4] EXIT</text>
-      <text x="50" y="598" fill="#e8e8e8">SELECT YOUR USER : <tspan fill="#8fd3ff">4</tspan></text>
+      <text x="50" y="508" fill="#e8e8e8">SELECT YOUR USER : <tspan fill="#8fd3ff">1</tspan></text>
+      <text x="50" y="530" fill="#e8e8e8">ENTER NAME OF NEW USER: <tspan fill="#8fd3ff">Priya Singh</tspan></text>
+      <text x="50" y="552" fill="#e8e8e8">ENTER ACCOUNT NO. OF NEW USER: <tspan fill="#8fd3ff">2078</tspan></text>
+      <text x="50" y="578" fill="#ff6b6b">USER ALREADY EXISTS!!</text>
+
+      <text x="50" y="602" fill="#e8e8e8">SELECT YOUR USER : <tspan fill="#8fd3ff">4</tspan></text>
     </g>
   </g>
 </svg>

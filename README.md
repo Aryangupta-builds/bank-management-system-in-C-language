@@ -17,7 +17,7 @@ A console-based **Bank Management System** written in C, using file handling (`u
 ### 🛠️ Manager
 - First-run setup: create bank manager profile + master password
 - Login with **Manager Account Number + Master Password**
-- ➕ Add new user
+- ➕ Add new user — blocks duplicate account numbers and account numbers that clash with the manager's own account
 - 🔍 Search user by account number
 - 🗑️ Delete user (with confirmation)
 
@@ -37,7 +37,7 @@ A console-based **Bank Management System** written in C, using file handling (`u
 - Each customer record (`struct Bank`) stores: name, account number, balance, PIN.
 - The manager record (`struct Manager`) stores: name, account number, master password.
 - All reads/writes go through helper functions:
-  - `finduser()` — looks up an account by number
+  - `finduser()` — looks up an account by number (also used to reject duplicate account numbers when adding a new user)
   - `updatebalance()` — rewrites `user.txt` with an updated balance
   - `deleteuser()` — rewrites `user.txt` excluding the deleted account
   - `interbanktransaction()` — validates and performs a transfer between two accounts

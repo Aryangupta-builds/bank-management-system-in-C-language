@@ -625,19 +625,38 @@ int main()
 
                     printf("ENTER ACCOUNT NO. OF NEW USER: ");
                     scanf("%d", &b.Account_no);
+                    if (b.Account_no == m.manageraccount)
+                    {
+                        printf("\033[31m");
+                        printf("YOU HAVE ENTERED YOUR ACCOUNT NO. PLEASE CHECK YOUR DATA\n");
+                        printf("\033[0m");
+                        fclose(user);
+                        break;
+                    }
+                    else if (finduser(b.Account_no, &b) == 1)
+                    {
+                        printf("\033[31m");
+                        printf("USER ALREADY EXISTS!!\n");
+                        printf("\033[0m");
+                        fclose(user);
+                        break;
+                    }
+                    else
+                    {
+                        printf("ENTER THE INITIAL BALANCE OF ACCOUNT: ");
+                        scanf("%f", &b.balance);
 
-                    printf("ENTER THE INITIAL BALANCE OF ACCOUNT: ");
-                    scanf("%f", &b.balance);
+                        printf("SET PIN OF USER : ");
+                        getchar();
+                        scanf("%d", &b.pin);
 
-                    printf("SET PIN OF USER : ");
-                    getchar();
-                    scanf("%d", &b.pin);
+                        fprintf(user, "%s\n %d\n %.2f\n %d\n", b.name, b.Account_no, b.balance, b.pin);
+                        fclose(user);
 
-                    fprintf(user, "%s\n %d\n %.2f\n %d\n", b.name, b.Account_no, b.balance, b.pin);
-                    fclose(user);
-                    printf("\033[32m");
-                    printf("\nUser Added Sucessfully!!\n");
-                    printf("\033[0m");
+                        printf("\033[32m");
+                        printf("\nUser Added Sucessfully!!\n");
+                        printf("\033[0m");
+                    }
                     break;
                 }
                 case 2:
